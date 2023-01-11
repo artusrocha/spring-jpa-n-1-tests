@@ -1,0 +1,34 @@
+package com.example.demo.a.data.entities;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import lombok.Getter;
+
+@Getter
+@Entity
+public class Attendant {
+
+    @Id
+    private UUID id;
+
+    private String firstName;
+    
+    private String lastName;
+    
+    private LocalDateTime createdAt;
+    
+    private LocalDateTime updatedAt;
+
+    public String fullName() {
+        return new StringBuilder()
+            .append(firstName)
+            .append(" ")
+            .append(lastName)
+            .toString();
+    }
+
+}

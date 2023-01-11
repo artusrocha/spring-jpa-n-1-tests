@@ -1,14 +1,13 @@
 package com.example.demo.a.api.rest;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.a.data.entities.Customer;
 import com.example.demo.a.handlers.CustomersHandler;
-
+import com.example.demo.a.dto.CustomerReportDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -18,7 +17,7 @@ public class CustomersRestController {
     private final CustomersHandler customersHandler;
 
     @GetMapping()
-    public List<Customer> getCustomers() {
-        return customersHandler.getCustomers();   
+    public Page<CustomerReportDto> getCustomers(Pageable pageable) {
+        return customersHandler.getCustomers( pageable );
     }
 }
