@@ -1,0 +1,2 @@
+select customer0_.id as id1_2_, customer0_.created_at as created_2_2_, customer0_.first_name as first_na3_2_, customer0_.last_name as last_nam4_2_, customer0_.updated_at as updated_5_2_ from customer customer0_ limit ?
+select loanitem0_.customer_id as col_0_0_, book1_.id as col_1_0_, book1_.name as col_2_0_, book1_.description as col_3_0_, loanitem0_.created_at as col_4_0_ from loan_item loanitem0_ inner join book book1_ on loanitem0_.book_id=book1_.id where loanitem0_.customer_id in (? , ? , ? , ? , ?)
