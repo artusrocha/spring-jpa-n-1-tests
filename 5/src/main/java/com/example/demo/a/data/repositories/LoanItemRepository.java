@@ -11,28 +11,20 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.a.data.entities.LoanItem;
 import com.example.demo.a.data.entities.LoanItemId;
 
-import com.example.demo.a.dto.LoanedBookDto;
 import com.example.demo.a.dto.ILoanedBookDto;
 
 @Repository
 public interface LoanItemRepository extends JpaRepository<LoanItem, LoanItemId> {
 
-    @Query("SELECT new com.example.demo.a.dto.LoanedBookDto(" + 
-           "  b.id, b.name, b.description, li.createdAt " +
-           ") " +
-           "FROM LoanItem li " +
-           "JOIN li.book b " +
-           "WHERE li.customerId = :customerId")
-    Set<LoanedBookDto> findAllByCustomerId(@Param("customerId") UUID customerId);
-
     @Query("SELECT " + 
+           "  li.customerId as customerId, " +
            "  b.id as bookId, " + 
            "  b.name as bookName, " + 
            "  b.description as bookDescription, " + 
            "  li.createdAt as loanDateTime " +
            "FROM LoanItem li " +
            "JOIN li.book b " +
-           "WHERE li.customerId = :customerId")
-    Set<ILoanedBookDto> findAllByCustomerIdToInterface(@Param("customerId") UUID customerId);
+           "WHERE li.customerId IN (:customerIds)")
+    Set<ILoanedBookDto> findAllByCustomerIds(@Param("customerIds") Set<UUID> customerIds);
 
 }

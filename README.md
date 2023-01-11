@@ -44,13 +44,29 @@ Pontos negativos:
 
 ### Cenário 4
 
-Mudança: adicionando FetchType.LAZY em todos os relacionamentos
+Mudança: Query JPQL com Projection
 
 requisição API gerou:
-- 21 selects
+- 6 selects
 
+Pontos positivos:
+- Não há necessidade de parsing/conversão de entidade para DTO
+- Redução significativa de queries 
 
 Pontos negativos:
-- Mesma complexidade do cenáio 2 na quest: parsing/conversão de entidade para DTO
-- Aumento na quantidade de queries 
+- Implementação/manutenção de query
+- Alguns erros na query só são detectados em runtime ***
+
+### Cenário 5
+
+requisição API gerou:
+- 6 selects
+
+Pontos positivos:
+- Não há necessidade de parsing/conversão de entidade para DTO
+- Redução significativa de queries 
+
+Pontos negativos:
+- Os mesmos do cenário 4
+
 

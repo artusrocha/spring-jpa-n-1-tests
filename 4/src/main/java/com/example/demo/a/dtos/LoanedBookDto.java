@@ -4,25 +4,15 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import lombok.Getter;
-import lombok.Builder;
-
-import com.example.demo.a.data.entities.LoanItem;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Builder
-public class LoanedBookDto {
+@RequiredArgsConstructor
+public class LoanedBookDto implements ILoanedBookDto {
 
     private final UUID bookId;
     private final String bookName;
     private final String bookDescription;
     private final LocalDateTime loanDateTime;
 
-    public static LoanedBookDto from(final LoanItem loanItem) {
-        return LoanedBookDto.builder()
-            .bookId( loanItem.getBook().getId() )
-            .bookName( loanItem.getBook().getName() )
-            .bookDescription( loanItem.getBook().getDescription() )
-            .loanDateTime( loanItem.getCreatedAt() )
-            .build();
-    }
 }
