@@ -1,6 +1,6 @@
----
+<!-- ---
 marp: false
----
+--- -->
 
 # Performance: Problemas de consultas N+1
 > O problema de consultas N+1 ocorre quando para cada linha retornada em uma consulta inicial (à um banco de dados sql por exemplo) sua aplicação necessita realizar uma segunda consulta para recuperar dados adicionais de uma outra tabela. 
