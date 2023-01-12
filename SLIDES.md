@@ -1,10 +1,11 @@
 ---
-marp: false
+marp: true
 ---
 
 # Performance: Problemas de consultas N+1
 > O problema de consultas N+1 ocorre quando para cada linha retornada em uma consulta inicial (à um banco de dados sql por exemplo) sua aplicação necessita realizar uma segunda consulta para recuperar dados adicionais de uma outra tabela. 
 
+---
 
 Para exemplificar este problema gerei 5 cenários para testes com diferentes implementações.
   
@@ -30,6 +31,7 @@ erDiagram
 
 ![](relationship.png)
 
+---
 
 ## Cenário Base: 
 
@@ -40,6 +42,7 @@ erDiagram
   - cada customer 5 loan_items
 - Será construida um API em cada cenário que deve retornar os customers com seu respectivos loan_items/books:  
 
+---
 
 exemplo:
 ```ts
@@ -67,7 +70,8 @@ ___
 
 Neste cenário (como **não** fazer) o model/entity está exposto, sendo serializado para json e retornado diretamente em uma List.
 
-<!-- 
+<!-- ---
+
 ##### Cenário 1 (COMO **NÃO** FAZER)  -->
 
 ```java
@@ -84,6 +88,7 @@ public class CustomersRestController {
 }
 ```
 
+---
 
 requisição full gerou:
 
@@ -93,6 +98,7 @@ requisição page-size=5:
 
 - Não aplicável, neste caso seria usada a chamada full com 33 selects
 
+---
 
 #### Pontos negativos:
 
@@ -125,6 +131,7 @@ public class Attendant {
 }
 ```
 
+---
 curl: 
 ```bash
 $ curl localhost:8081
@@ -144,6 +151,7 @@ been committed
 ...
 ```
 
+---
 
 O que ocorre neste caso é que a serialização para string/json entre em um loop infinito, causado pelo relacionamento circular entra até esgotar os recursos e gerar um erro.  
   
@@ -164,6 +172,7 @@ requisição page-size=5 gerou:
 
 - 17 selects
 
+---
 
 ### Mudanças:
 
@@ -181,6 +190,7 @@ public class CustomersRestController {
 }
 ```
 
+---
 
 ```java
 @Component
@@ -207,6 +217,7 @@ public class CustomersHandler {
 }
 ```
 
+---
 
 #### Pontos positivos:
 
@@ -236,6 +247,7 @@ public class LoanItem {
 }
 ```
 
+---
 
 ### selects gerados com FetchType.EAGER:
 
@@ -247,6 +259,7 @@ left outer join book on loan_item.book_id=book.id
 where loan_item.loan_id=?
 ```
 
+---
 
 ### selects gerados com FetchType.LAZY:
 
@@ -278,6 +291,7 @@ requisição page-size=5 gerou:
 
 - 42 selects
 
+---
 
 #### Pontos negativos:
 
@@ -298,6 +312,7 @@ requisição page-size=5 gerou:
 
 - 7 selects
 
+---
 
 ### Mudanças:
 
@@ -314,6 +329,7 @@ adicionado metodo em LoanItemRepository:
 Set<LoanedBookDto> findAllByCustomerId(@Param("customerId") UUID customerId);
 ```
 
+---
 
 Ou usando interface como projection...
 
@@ -343,6 +359,7 @@ Set<ILoanedBookDto> findAllByCustomerIdToInterface(
                             @Param("customerId") UUID customerId);
 ```
 
+---
 
 #### Pontos positivos:
 
@@ -366,12 +383,14 @@ Neste cenário, no lugar de fazer uma busca dentro da iteração,
 é feita uma busca prévia do tipo *SELECT ... WHERE **IN** (?)*
 que é então cacheada em um Map (o identity map) agrupados por Custome.id.
 
+---
 
 requisições full e size=5 geram:
 
 - **2 selects** 
 
 
+---
 
 ### Mudanças:
 
@@ -406,6 +425,7 @@ public class CustomersHandler {
 }
 ```
 
+---
 
 #### Pontos positivos:
 
@@ -418,6 +438,7 @@ public class CustomersHandler {
 - Alguns erros na query só são detectados em runtime ***
 - Maior complexidade no código
 
+---
 
 ## Resumo
 
@@ -447,6 +468,7 @@ Boleean exists = repository.exists();
 if ( exists ) { /*...*/}
 ```
 
+---
 
 ### Complementos
 
@@ -463,7 +485,15 @@ Long size = repository.count();
 //Long size = repository.countByField();
 ```
 
+---
 
+?
+
+---
+
+obrigado!
+
+---
 
 referências e outras leituras:  
 - https://thorben-janssen.com/entity-mappings-introduction-jpa-fetchtypes/
